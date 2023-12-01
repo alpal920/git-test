@@ -1,0 +1,88 @@
+/*
+https://www.codewars.com/kata/5375f921003bf62192000746
+
+for condition to be true: OK 
+- if word > = 4, need to apply the abbreviate rules 
+- if word < 4, keep the word 
+
+check str length OK 
+if word > = 4, 
+- keep letter[0] and letter[str length - 1]
+- to calc the removed characters (str.length - 2)
+
+need to have a temp array string 
+
+also need to account for spaces/dashes/delimiters. 
+- if those are present in the string, that means there are multiple words in the string OK on check 
+- now need to figure out what the delimiter is and in what order they should be separating the words 
+
+check if the string contains delimiters (includes) 
+- if yes, can split into array, which will separate each word 
+- need to include the delimiter between each word (while pushing, insert a delimiter?)
+- need to also know what delimiter and in what order 
+- if delimiter, push into an array of delimiters 
+- when creating final str array, push the letter[0] > character count > last letter > delimiter
+
+
+*/
+
+function abbreviate(str) {
+  let alphabet = "abcdefghijklmnopqrstuvwxyz";
+  let strArr = [str];
+  let finalArr = [];
+
+  const delimiter = delimiterCount(str);
+
+  //this works to indicate if there are delimiters in the string
+  if (!alphabet.includes(str.toLowerCase())) {
+    for (let i = 0; i < str.length; i++) {
+      for (let key in delimiter) {
+        strArr = str.split(delimiter[key]); //the split is not working for every comma???
+      }
+    }
+  }
+  console.log("strArr", strArr); // ['elephant', 'poop']
+
+  for (let i = 0; i < strArr.length; i++) {
+    let remove = strArr[i].length - 2;
+    let tempArr = []; //holds the word pulled out
+    if (strArr[i].length >= 4) {
+      //i need this to be the word length
+      tempArr.push(strArr[i][0]);
+      tempArr.push(remove);
+      tempArr.push(strArr[i][strArr[i].length - 1]);
+    } else {
+      tempArr.push(strArr[i]);
+    }
+    console.log(tempArr);
+    finalArr.push(tempArr.join(""));
+  }
+  console.log("Final Arr:", finalArr); //['e6t', 'p2p']
+
+  //now i want to insert delimiters at the index specified in the object key
+  for (let key in delimiter) {
+    finalArr.splice(parseInt(key), 0, delimiter[key]);
+  }
+  //console.log("tempArr", tempArr);
+  // console.log("finalArr", finalArr);
+  return finalArr.join("");
+}
+
+//delimiter counter
+
+function delimiterCount(str) {
+  let alphabet = "abcdefghijklmnopqrstuvwxyz";
+  let obj = {};
+  let indexCounter = 1; //index counter is also wrong
+  for (let i = 0; i < str.length; i++) {
+    if (!alphabet.includes(str[i].toLowerCase())) {
+      obj[indexCounter] = str[i]; //object key = the index, object key/val = the delimiter
+      ++indexCounter;
+    }
+  }
+  return obj;
+}
+
+//"You need, need not want, to complete this code-wars mission"
+//Correct:  'You n2d, n2d not w2t, to c6e t2s c2e-w2s m5n'
+// Mine:    'You ,   ,    - n3,n2dnotw3,toc6et2sc7sm5n'
