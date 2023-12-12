@@ -1,0 +1,98 @@
+/*
+Build Tower
+Build a pyramid-shaped tower, as an array/list of strings, given a positive integer number of floors. A tower block is represented with "*" character.
+
+For example, a tower with 3 floors looks like this:
+
+[
+  "  *  ",
+  " *** ", 
+  "*****"
+]
+And a tower with 6 floors looks like this:
+
+[
+  "     *     ", 
+  "    ***    ", 
+  "   *****   ", 
+  "  *******  ", 
+  " ********* ", 
+  "***********"
+]
+
+*/
+
+/*
+given a total of n floors:
+- i need to increase the stars by 2 for each iteration of n 
+
+during first iteration of n (i = 0):
+- number of stars = 0 
+
+for each iteration of n: 
+- i need to see how many stars there are 
+- i need to push x number of stars into a temp array 
+- once i finish adding stars to my temp array, i need to push the temp array into a big array 
+
+- i need to add 2 stars for the next iteration of n 
+
+i can push the number of stars i need into a temp Arr 
+push the tempArr into the bigArr.join("") so that it is a string 
+
+the length of each value within the big arr needs to equal the length of the last value within the bigArr 
+-- bigArr[bigArr.length-1]
+
+--- for all other values, add empty spaces so that it equals 
+-- the spaces need to be even on both sides 
+
+
+
+return the bigArr of stars 
+*/
+
+function towerBuilder(nFloors) {
+  let stars = 1;
+  let bigArr = [];
+  let starVal = "*";
+
+  if (nFloors === 0) {
+    return "";
+  }
+
+  if (nFloors > 0) {
+    for (let i = 0; i < nFloors; i++) {
+      let tempArr = [];
+      for (let j = 0; j < stars; j++) {
+        //for each star, i need to add a starVal
+        tempArr.push(starVal);
+      }
+      bigArr.push(tempArr.join("")); //once i'm done adding stars, i need to push it into the big array
+      stars += 2; //then i need to add 2 stars to the total stars. repeat again for the next floor
+    }
+  }
+
+
+  /*
+  i need to add equal number of spaces to each side of the string value within the array 
+  - number spaces to add is the length of the final value in the big array - the current floor length 
+  - the number spaces to add to each side of the current floor is spaces / 2 
+
+This is not working: 
+
+
+
+  for (let i = 0; i < bigArr.length; i++) {
+    let floor = bigArr[i];
+    let lastLength = bigArr[bigArr.length - 1].length;
+    let spaces = parseInt(lastLength - floor[j].length);
+    for (let j = 0; j < floor.length; j++) {
+      
+      let spacePush = Array(Math.floor(spaces / 2)).join(" ");
+
+      floor = spacePush + floor + spacePush;
+    }
+  }
+  return bigArr;
+}
+
+  */
