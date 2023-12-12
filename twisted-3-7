@@ -1,0 +1,97 @@
+/*
+Problem: 
+DESCRIPTION:
+#Sorting on planet Twisted-3-7
+
+There is a planet... in a galaxy far far away. It is exactly like our planet, but it has one difference: #The values of the digits 3 and 7 are twisted. Our 3 means 7 on the planet Twisted-3-7. And 7 means 3.
+
+Your task is to create a method, that can sort an array the way it would be sorted on Twisted-3-7.
+
+test cases: 
+[1,2,3,4,5,6,7,8,9] -> [1,2,7,4,5,6,3,8,9]
+[12,13,14] -> [12,14,13]
+[9,2,4,7,3] -> [2,7,4,3,9]
+
+given an array of numbers, i need to: 
+- sort the numbers in ascending order 
+- determine if the number contains a 3 (3, 13, 33)
+-- if it has a 3, i need to put it in the position of where the 7 would go 
+-- if it has a 7, i need to put it in the position of where the 3 would go 
+
+bigArr = final array that is sorted and swapped 
+threeSevens = array of 3 and 7's that are pushed from the original array 
+
+evaluating the original array: 
+- sort the original array in ascending order 
+- if the number does not contain 3 or 7, push it into bigArr 
+- if the number contains 3 or 7, push blank into bigARR 
+-- push the 3 and 7 numbers into threeSevens Arr 
+
+evaluating threeSevens: 
+- sort the array in descending order so that: [17, 13, 7, 3]
+- after sorted, use a loop 
+-- if the value in bigArr is blank, set it equal to threeSevens[i]; 
+
+
+return bigArr 
+
+notes: bigArr will not be sorted 
+only threeSevens and original array will be sorted (sortedArr)
+
+*/
+
+function sortTwisted37(array) {
+  const sortedArr = sortedOriginal(array); //sorted original array
+  let bigArr = [];
+  let threeSevens = [];
+  let twisted = "37";
+  const sortedThreeSevens = sortThreeSevens(threeSevens);
+
+  console.log("sortedArr ", sortedArr);
+
+  for (let i = 0; i < sortedArr.length; i++) {
+    let num = sortedArr[i];
+    let numStr = num.toString();
+    let numSplit = numStr.split("");
+
+    for (let j = 0; j < numSplit.length; j++) {
+      if (twisted.includes(numSplit[j])) {
+        threeSevens.push(num); //this is not working. 
+        bigArr.push(" ");
+        break;
+      } else {
+        bigArr.push(num);
+        break; //why is the break needed???
+      }
+    }
+  }
+  console.log("threeSevens ", threeSevens);
+  console.log("bigArr ", bigArr);
+
+  for (let i = 0; i < bigArr.length; i++) {
+    if (bigArr[i] === " ") {
+      for (let j = 0; j < sortedThreeSevens.length; j++) {
+        bigArr[i] = sortedThreeSevens[j];
+        console.log("bigArr ", bigArr);
+        continue;
+      }
+    }
+  }
+  return bigArr;
+}
+
+function sortedOriginal(array) {
+  let sortOrig = array;
+  sortOrig.sort(function (a, b) {
+    return a - b;
+  });
+  return sortOrig;
+}
+
+function sortThreeSevens(threeSevens) {
+  let sorted = threeSevens;
+  sorted.sort(function (a, b) {
+    return b - a;
+  });
+  return sorted;
+}
