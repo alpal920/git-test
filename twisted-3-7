@@ -12,86 +12,116 @@ test cases:
 [12,13,14] -> [12,14,13]
 [9,2,4,7,3] -> [2,7,4,3,9]
 
-given an array of numbers, i need to: 
-- sort the numbers in ascending order 
-- determine if the number contains a 3 (3, 13, 33)
--- if it has a 3, i need to put it in the position of where the 7 would go 
--- if it has a 7, i need to put it in the position of where the 3 would go 
+/*
+steps: 
+1 - i need to eval each value in a sorted array (ascending order) 
+> sort the given array in ascending order 
+> do a for loop on the sortedArr 
 
-bigArr = final array that is sorted and swapped 
-threeSevens = array of 3 and 7's that are pushed from the original array 
+>> inide the sortedArr: 
+2-  i need to evaluate the number using a for loop 
+num = sortedArr[i] 
 
-evaluating the original array: 
-- sort the original array in ascending order 
-- if the number does not contain 3 or 7, push it into bigArr 
-- if the number contains 3 or 7, push blank into bigARR 
--- push the 3 and 7 numbers into threeSevens Arr 
+Conditionals: 
+- if the current number does not contain a 3 or 7
+-- push it into the output array 
 
-evaluating threeSevens: 
-- sort the array in descending order so that: [17, 13, 7, 3]
-- after sorted, use a loop 
--- if the value in bigArr is blank, set it equal to threeSevens[i]; 
+- if the current number contains a 3 or 7 
+-- put a blank space into the output array  
+
+How to eval current number: 
+- turn the current number into a string 
+numStr = num.toString() ----> // 13 --> "13"
+numSplit = numStr.split("") ----> // "1", "3"
+
+- evaluate if the string contains a 3 or 7 
+let searchVal = "37"; 
+if(searchVal.includes(numSplit)) ----> if this evaluates true. Stop and add the number 
+
+-- pull out that number and put it into an array of only 3 and 7's 
+
+3. now i have an array of 3 and 7's 
+-- i need to sort the array of only 3 and 7's in descending order 
+HOW?  
 
 
-return bigArr 
+4. i need to insert the 3 or 7 value back into the output Array for each of the blank spots 
+- looping through the output array, if the value is blank
+-- set it = to the 37 array value 
+-- once the value is set, need to move onto the next output Array value AND next 37 array value 
 
-notes: bigArr will not be sorted 
-only threeSevens and original array will be sorted (sortedArr)
+
+- return the output Array 
+
+expected:[ -24, -14, 6, 6, 8, 75, 14, 20, 26, 34, 30, 48, 50, 50, 62, 64, 13 ] 
+correct: [ -24, -14, 6, 6, 8, 14, 13, 20, 26, 75, 48, 50, 50, 62, 64, 30, 34 ]
+         [-24, -14, 6, 6, 8, 75, 14, 20, 26, 34, 30, 48, 50, 50, 62, 64, 13]
 
 */
 
-function sortTwisted37(array) {
-  const sortedArr = sortedOriginal(array); //sorted original array
-  let bigArr = [];
-  let threeSevens = [];
-  let twisted = "37";
-  const sortedThreeSevens = sortThreeSevens(threeSevens);
+function twisted(arr) {
+  let outputArr = [];
+  let twistedArr = [];
+  let sortOrig = arr; 
+  let sortedArr = sortedOriginal(sortOrig);
 
-  console.log("sortedArr ", sortedArr);
+  console.log("sortedArr: ", sortedArr);
 
   for (let i = 0; i < sortedArr.length; i++) {
     let num = sortedArr[i];
     let numStr = num.toString();
     let numSplit = numStr.split("");
 
-    for (let j = 0; j < numSplit.length; j++) {
-      if (twisted.includes(numSplit[j])) {
-        threeSevens.push(num); //this is not working. 
-        bigArr.push(" ");
-        break;
-      } else {
-        bigArr.push(num);
-        break; //why is the break needed???
-      }
+    if (numTester(numSplit) === true) {
+      twistedArr.push(num);
+      outputArr.push(" ");
+    } else {
+      outputArr.push(num);
     }
   }
-  console.log("threeSevens ", threeSevens);
-  console.log("bigArr ", bigArr);
 
-  for (let i = 0; i < bigArr.length; i++) {
-    if (bigArr[i] === " ") {
-      for (let j = 0; j < sortedThreeSevens.length; j++) {
-        bigArr[i] = sortedThreeSevens[j];
-        console.log("bigArr ", bigArr);
-        continue;
+  console.log("twistedArr: ", twistedArr);
+
+  const sorted_list = twistedArr.sort(function (a, b) {
+    return b - a;
+  });
+
+  console.log("descSort: ", sorted_list);
+
+  let pointerIndex = 0;
+
+  if (sorted_list.length === 1) {
+    if (sorted_list[pointerIndex] > outputArr[0]) {
+      outputArr.push(sorted_list[pointerIndex]);
+    } else {
+      outputArr.unshift(sorted_list[pointerIndex]);
+    }
+    outputArr.splice(outputArr.indexOf(" "), 1);
+  } else {
+    for (let i = 0; i < outputArr.length; i++) {
+      if (outputArr[i] === " ") {
+        outputArr[i] = sorted_list[pointerIndex++];
       }
     }
   }
-  return bigArr;
+  return outputArr;
 }
 
-function sortedOriginal(array) {
-  let sortOrig = array;
+function sortedOriginal(arr) {
+  let sortOrig = arr;
   sortOrig.sort(function (a, b) {
     return a - b;
   });
   return sortOrig;
 }
 
-function sortThreeSevens(threeSevens) {
-  let sorted = threeSevens;
-  sorted.sort(function (a, b) {
-    return b - a;
-  });
-  return sorted;
+function numTester(numSplit) {
+  let searchVal = "37";
+  for (let i = 0; i < numSplit.length; i++) {
+    if (searchVal.includes(numSplit[i])) {
+      return true;
+    }
+  }
+  return false;
 }
+
