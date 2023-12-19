@@ -1,0 +1,37 @@
+/*
+https://www.codewars.com/kata/5842df8ccbd22792a4000245/solutions/javascript?filter=me&sort=best_practice&invalids=false
+*/
+
+function expandedForm(num) {
+  let numDigit = numDigits(num); //if num = 1234, numDigit = 4
+  let power = numDigit - 1;
+  let remainingTotal = num;
+  let outputStr = "";
+
+  //for each number value:
+  while (power > 0) {
+    let value = Math.floor(remainingTotal / 10 ** power) * 10 ** power;
+    remainingTotal -= value;
+    if (value !== 0) {
+      outputStr += value + " + ";
+    }
+    power--;
+  }
+  if (remainingTotal !== 0) {
+    outputStr += remainingTotal;
+  } else {
+    let findLast = outputStr.lastIndexOf(" +");
+    outputStr = outputStr.substring(0, findLast);
+  }
+
+  return outputStr;
+}
+
+//this function determines how many places there are in the number
+function numDigits(num) {
+  let numDig = 0;
+  while (num < 10 ** (numDig - 1) || num >= 10 ** numDig) {
+    numDig++;
+  }
+  return numDig;
+}
